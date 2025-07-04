@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calculator</title>
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: #FFEFBA;  /* fallback for old browsers */
+        background: -webkit-linear-gradient(to right, #FFFFFF, #FFEFBA);  /* Chrome 10-25, Safari 5.1-6 */
+        background: linear-gradient(to right, #FFFFFF, #FFEFBA); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+      }
+
+      section {
+        height: 80%;
+        width: 30%;
+        border: 1px solid black;
+
+        display: grid;
+        grid-template-columns: repeat(4, auto);
+        grid-template-rows: repeat(5, auto);
+        gap: 5px;
+        background-color: #171813;
+        padding: 5px;
+      }
+
+      div {
+        font-size: 1.6rem;
+        text-align: center;
+        align-content: center;
+        color: white;
+        font-weight: bold;
+        font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+      }
+
+      div:not(#display) {
+        cursor: pointer;
+      }
+      #display {
+        grid-column: 1 / span 4;
+        grid-row: 1 / span 1.7;
+        background-color: #171813;
+        color: white;
+        display: flex;
+        justify-content: end;
+        align-items: end;
+      }
+
+      #clear, #backspace {
+        /* grid-column: 1 / span 2; */
+        background-color: #ff5112;
+      }
+
+      .number.zero {
+        grid-column: 1 / span 2;
+      }
+
+      #equal {
+        grid-row: 5 / span 2;
+        grid-column: 4;
+        background-color: #0065a9;
+      }
+
+      .operator {
+        background-color: #9d9f9e;
+      }
+
+      .number {
+        background-color: #696d6c;
+      }
+
+      @media screen and (max-width: 600px) {
+        section {
+          width: 90%;
+          height: 90%;
+        }
+
+        #display {
+          font-size: 1.2rem;
+        }
+
+        div {
+          font-size: 1.2rem;
+        }
+        
+      }
+    </style>
+  </head>
+  <body>
+    <section>
+      <div id="display"><p id="result">0</p></div>
+      <div id="clear">AC</div>
+      <div id="backspace">D</div>
+      <div class="operator">/</div>
+      <div class="operator">x</div>
+      <div class="number">7</div>
+      <div class="number">8</div>
+      <div class="number">9</div>
+      <div class="operator">-</div>
+      <div class="number">4</div>
+      <div class="number">5</div>
+      <div class="number">6</div>
+      <div class="operator">+</div>
+      <div class="number">1</div>
+      <div class="number">2</div>
+      <div class="number">3</div>
+      <div id="equal">=</div>
+      <div class="number zero">0</div>
+      <div class="number">.</div>
+    </section>
+  </body>
+
+  <script>
+    let string = "";
+    let display = document.getElementById("display");
+    function value(value) {
+      string += value;
+      display.innerText = string;
+    }
+
+    document.querySelector("body").addEventListener("click", (e) => {
+      if (
+        e.target.classList.contains("number") ||
+        e.target.classList.contains("operator")
+      ) {
+        if (e.target.innerText == "x") {
+          value("*");
+        } else {
+          value(e.target.innerText);
+        }
+      }
+    });
+
+    document.body.addEventListener("keydown", (e) => {
+      if (["0", "1", "2", "3", "4", "5", "6", "7", "8", "9",".", "/", "*", "-", "+"].includes(e.key)) {
+        value(e.key);
+      } else if (e.key === "Enter" || e.key === "=") {
+        equal();
+      } else if (e.key === "Escape") {
+        display.innerText = "0";
+        string = "";
+      } else if (e.key === "Backspace") {
+        backspace();
+      }
+    });
+
+
+    function equal() {
+      if (string === "") {
+        display.innerText = 0;
+      } else {
+        try {
+          display.innerText = eval(string);
+          string = "";
+        } catch (error) {
+          display.innerText = "Error";
+          string = "";
+        }
+      }
+    }
+    function backspace() {
+      if (string.length > 0) {
+        string = string.slice(0, -1);
+        display.innerText = string || "0";
+      }
+    }
+    document.getElementById("equal").addEventListener("click", equal);
+
+    document.getElementById("clear").addEventListener("click", () => {
+      display.innerText = "0";
+      string = "";
+    });
+    document.getElementById("backspace").addEventListener("click", backspace);
+  </script>
+</html>
